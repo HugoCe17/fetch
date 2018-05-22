@@ -1,0 +1,9 @@
+with npm
+
+npm install
+npm run test
+
+or with yarn
+
+yarn
+yarn test
