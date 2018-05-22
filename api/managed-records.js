@@ -7,19 +7,6 @@ window.path = 'http://localhost:3000/records';
 
 // Your retrieve function plus any additional functions go here ...
 
-function assign(targetObj) {
-  for (var i = 1; i < arguments.length; i++) {
-    var sourceObj = arguments[i];
-    for (var oKey in sourceObj) {
-      if (sourceObj.hasOwnProperty(oKey)) {
-        targetObj[oKey] = sourceObj[oKey];
-      }
-    }
-  }
-
-  return targetObj;
-}
-
 function createQuery({
   page = 1,
   limit = 10,
@@ -64,7 +51,9 @@ async function transformData({ data, page = 1, limit = 10 }) {
 
       open: data
         .filter(datum => datum.disposition === 'open')
-        .map(datum => assign({}, { isPrimary: isPrimary(datum.color) }, datum)),
+        .map(datum =>
+          Object.assign({}, { isPrimary: isPrimary(datum.color) }, datum),
+        ),
 
       closedPrimaryCount: data.filter(
         datum => isPrimary(datum.color) && datum.disposition === 'closed',
@@ -97,7 +86,6 @@ async function retrieve(opts) {
   try {
     const limit = 10;
     const query = createQuery({ page, limit, colors });
-    // console.log('QUERY: ', query);
     const response = await fetch(query, {
       method: 'GET',
     });
